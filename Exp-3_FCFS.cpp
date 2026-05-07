@@ -1,45 +1,53 @@
-#include <iostream>
-using namespace std;
+#include<iostream>
+#include<algorithm>
+using namespace std ;
+struct process
+{
+    int pid ;
+    int at ;
+    int bt ;
+    int ct ;
+    int tat ;
+    int wt ;
+};
+int main()
+{
+    int n ;
+    cout<<"Enter number of processes : " ;
+    cin>>n ;
+    process p[n] ;
+    for(int i = 0 ; i < n ; i++)
+    {
+         p[i].pid=i+1 ;
+         cout<<"Enter Arrival time for process, Enter Burst time for process" <<p[i].pid<<": ";;
+         cin>>p[i].bt>>p[i].at;;
+    }
+    sort(p, p + n, [](process a, process b)
+         { return a.at < b.at; });
 
-int main() {
-    int n;
-    cout << "Enter number of processes: ";
-    cin >> n;
-
-    int at[10], bt[10], ct[10], tat[10], wt[10];
-
-    for (int i = 0; i < n; i++) {
-        cout << "Enter Arrival Time and Burst Time for P" << i + 1 << ": ";
-        cin >> at[i] >> bt[i];
+    int time = 0;
+    for(int i = 0 ; i < n ; i++)
+    {
+       if(time<p[i].at)
+       {
+        time = p[i].at ;
+       }
+      time = time + p[i].bt ;
+      p[i].ct = time ;
+      p[i].tat = p[i].ct - p[i].at ;
+      p[i].wt = p[i].tat - p[i].bt ;
     }
 
-    // Completion time for first process
-    ct[0] = at[0] + bt[0];
-
-    // Completion time for remaining processes
-    for (int i = 1; i < n; i++) {
-        if (ct[i - 1] < at[i])
-            ct[i] = at[i] + bt[i];   // CPU idle
-        else
-            ct[i] = ct[i - 1] + bt[i];
+    cout<<"/PID/AT/BT/CT/TAT/WT/"<<endl ;
+    for(int i = 0 ; i<n ; i++)
+    {
+        cout<<p[i].pid<<"\t";
+        cout<<p[i].at<<"\t";
+        cout<<p[i].bt<<"\t";
+        cout<<p[i].ct<<"\t";
+        cout<<p[i].tat<<"\t";
+        cout<<p[i].wt<<"\t";
+        cout<<endl;
     }
-
-    // Calculate TAT and WT
-    for (int i = 0; i < n; i++) {
-        tat[i] = ct[i] - at[i];
-        wt[i] = tat[i] - bt[i];
-    }
-
-    // Display output
-    cout << "\nP\tAT\tBT\tCT\tTAT\tWT\n";
-    for (int i = 0; i < n; i++) {
-        cout << "P" << i + 1 << "\t"
-             << at[i] << "\t"
-             << bt[i] << "\t"
-             << ct[i] << "\t"
-             << tat[i] << "\t"
-             << wt[i] << endl;
-    }
-
-    return 0;
+    return 0 ;
 }
